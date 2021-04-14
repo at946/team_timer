@@ -2,6 +2,7 @@ const express = require('express')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 const app = express()
+const socket = require('socket.io')
 
 // Import and Set Nuxt.js options
 const config = require('../nuxt.config.js')
@@ -24,10 +25,25 @@ async function start () {
   app.use(nuxt.render)
 
   // Listen the server
-  app.listen(port, host)
+  const server = app.listen(port, host)
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
     badge: true
   })
+
+  startSocket(server)
 }
+
+startSocket = (server) => {
+  const io = socket(server)
+
+  io.on('connection', (socket) => {    
+    // ルームの作成
+    socket.on('create-a-room', () => {
+      const room_id = Math.floor( Math.random() * 100000000 )
+      io.to(socket.id).emit('guide-to-the-room', room_id)
+    })
+  })
+}
+
 start()
