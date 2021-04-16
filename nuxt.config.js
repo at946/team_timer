@@ -37,7 +37,7 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
-    '@nuxtjs/pwa',
+    'nuxt-clipboard2'
   ],
   /*
   ** Build configuration

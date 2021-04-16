@@ -8,6 +8,7 @@
     <button @click="startTimer" :disabled="(Number(minute) * 60 + Number(second)) <= 0 || timerIsRunning">START</button>
     <button @click="stopTimer" :disabled="!timerIsRunning">STOP</button>
     <button @click="resetTimer" :disabled="timerIsRunning">RESET</button>
+    <button @click="copyUrl">COPY URL</button>
   </div>
 </template>
 
@@ -89,6 +90,10 @@ export default {
     resetTimer() {
       this.minute = this.setMinute
       this.second = this.setSecond
+    },
+
+    copyUrl() {
+      this.$copyText(window.location.origin + this.$route.fullPath)
     }
 
   }
