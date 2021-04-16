@@ -16,7 +16,7 @@ export default {
   },
 
   mounted () {
-    this.socket.on('guide-to-the-room', (room_id) => {
+    this.socket.on('reply-for-create-a-room', (room_id) => {
       this.$router.push(`/rooms/${room_id}`)
     })
   },

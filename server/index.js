@@ -36,12 +36,27 @@ async function start () {
 
 startSocket = (server) => {
   const io = socket(server)
+  const rooms = []
 
   io.on('connection', (socket) => {    
     // ルームの作成
     socket.on('create-a-room', () => {
       const room_id = Math.floor( Math.random() * 100000000 )
-      io.to(socket.id).emit('guide-to-the-room', room_id)
+      rooms.push({
+        id: room_id
+      })
+      console.log(rooms)
+      io.to(socket.id).emit('reply-for-create-a-room', room_id)
+    })
+
+    // ルームへの参加
+    socket.on('join-the-room', (room_id) => {
+      const room = rooms.find((room) => room.id === room_id)
+      if (room) {
+        socket.join(room_id)
+        io.to(socket.id).emit('reply-for-join-the-room')
+      }
+      console.log(rooms)
     })
   })
 }
