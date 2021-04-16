@@ -29,6 +29,7 @@
             :disabled="timerIsRunning"
     >RESET</button>
     <button @click="copyUrl">COPY URL</button>
+    {{ time }}
   </div>
 </template>
 
@@ -41,8 +42,10 @@ export default {
     return {
       socket: io(),
       timer: null,
-      minute: '',
-      second: '',
+      minute: null,
+      second: null,
+      time: null,
+      resetTime: null,
       setMinute: '',
       setSecond: '',
       timerIsRunning: false,
@@ -51,7 +54,7 @@ export default {
 
   head () {
     return {
-      title: `${("00" + this.minute).slice(-2)}:${("00" + this.second).slice(-2)} | TeamTimer`
+      title: `${("00" + Number(this.minute)).slice(-2)}:${("00" + Number(this.second)).slice(-2)} | TeamTimer`
     }
   },
 
@@ -59,16 +62,19 @@ export default {
     // join-the-roomのレスポンスを受け取る
     this.socket.on('reply-for-join-the-room', (res) => {
       if (res.admission) {
-        this.amFacilitator = res.isFacilitator
+        if (res.time) {
+          this.time = res.time
+          this.calcMinSecFromTime()
+        }
       } else {
         this.$router.push("/")
       }
     })
 
     // タイマー設定の更新を受け取る
-    this.socket.on('set-timer', (res) => {
-      this.minute = Math.floor(res.time / 60)
-      this.second = res.time % 60
+    this.socket.on('set-timer', (res) => { 
+      this.time = res.time
+      this.calcMinSecFromTime()
     })
 
     // ルームに参加
@@ -76,39 +82,53 @@ export default {
   },
 
   methods: {
+    // 秒から分秒を計算する
+    calcMinSecFromTime() {
+      this.minute = Math.floor(this.time / 60)
+      this.second = this.time % 60
+    },
+
+    // 分秒から秒を計算する
+    calcTimeFromMinSec() {
+      this.time = this.minute * 60 + this.second
+    },
+
+    // タイマーからフォーカスアウトしたら、設定の更新をソケットに送る
     focusOutInput() {
-      var time = Number(this.minute) * 60 + Number(this.second)
-      this.socket.emit('set-timer', { room_id: this.$route.params.id, time: time })
+      this.checkTimerValidation()
+      this.socket.emit('set-timer', { room_id: this.$route.params.id, time: this.time })
     },
 
     checkTimerValidation() {
-      var timerSecond = Number(this.minute) * 60 + Number(this.second)
+      this.minute = Number(this.minute)
+      this.second = Number(this.second)
+      this.calcTimeFromMinSec()
 
       // タイマーが0以下の場合、タイマーは0分0秒に設定されること
-      if (timerSecond <= 0) { timerSecond = 0 }
+      if (this.time <= 0) { this.time = 0 }
       // タイマーが60分より大きい場合、タイマーは60分に設定されること
-      if (timerSecond > 3600) { timerSecond = 3600 }
+      if (this.time > 3600) { this.time = 3600 }
 
-      this.minute = Math.floor(timerSecond / 60)
-      this.second = timerSecond % 60
+      this.calcMinSecFromTime()
     },
 
     startTimer() {
       this.checkTimerValidation()
-      if (this.minute == 0 && this.second == 0) { return }
-      this.setMinute = this.minute
-      this.setSecond = this.second
+
+      if (this.time <= 0) { return }
+
+      // リセット用にtimeの履歴を残す
+      this.resetTime = this.time
+
       const alermDate = new Date()
-      alermDate.setMinutes(alermDate.getMinutes() + this.minute)
-      alermDate.setSeconds(alermDate.getSeconds() + this.second)
+      alermDate.setSeconds(alermDate.getSeconds() + this.time)
       this.timerIsRunning = true
 
       this.timer = setInterval(() => {
         const presentDate = new Date()
-        const diffTime = Math.round((alermDate - presentDate) / 1000)
-        this.minute = Math.floor( diffTime / 60 )
-        this.second = diffTime % 60
-        if (diffTime < 1) {
+        this.time = Math.round((alermDate - presentDate) / 1000)
+        this.calcMinSecFromTime()
+        if (this.time < 1) {
           this.stopTimer()
           Push.create("Time is up!!", {
             onClick: function () {
@@ -126,8 +146,9 @@ export default {
     },
 
     resetTimer() {
-      this.minute = this.setMinute
-      this.second = this.setSecond
+      this.time = this.resetTime
+      this.calcMinSecFromTime()
+      this.socket.emit('set-timer', { room_id: this.$route.params.id, time: this.time })
     },
 
     copyUrl() {

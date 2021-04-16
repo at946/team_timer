@@ -53,15 +53,17 @@ startSocket = (server) => {
       const room = rooms.find((room) => room.id == room_id)
       if (room) {
         socket.join(room_id)
-        io.to(socket.id).emit('reply-for-join-the-room', { admission: true })
+        io.to(socket.id).emit('reply-for-join-the-room', { admission: true, time: room.time })
       } else {
         io.to(socket.id).emit('reply-for-join-the-room', { admission: false })
       }
     })
 
-    // タイマーの分の設定
+    // タイマー設定の更新
     socket.on('set-timer', (req) => {
-      io.in(req.room_id).emit('set-timer', { time: req.time })
+      const room = rooms.find((room) => room.id == req.room_id)
+      room.time = req.time
+      io.in(room.id).emit('set-timer', { time: room.time })
     })
   })
 }
