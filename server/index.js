@@ -45,18 +45,18 @@ startSocket = (server) => {
       rooms.push({
         id: room_id
       })
-      console.log(rooms)
       io.to(socket.id).emit('reply-for-create-a-room', room_id)
     })
 
     // ルームへの参加
     socket.on('join-the-room', (room_id) => {
-      const room = rooms.find((room) => room.id === room_id)
+      const room = rooms.find((room) => room.id == room_id)
       if (room) {
         socket.join(room_id)
-        io.to(socket.id).emit('reply-for-join-the-room')
+        io.to(socket.id).emit('reply-for-join-the-room', true)
+      } else {
+        io.to(socket.id).emit('reply-for-join-the-room', false)
       }
-      console.log(rooms)
     })
   })
 }

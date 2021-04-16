@@ -31,15 +31,17 @@ export default {
 
   head () {
     return {
-      title: `${("00" + this.minute).slice(-2)}:${("00" + this.second).slice(-2)}`
+      title: `${("00" + this.minute).slice(-2)}:${("00" + this.second).slice(-2)} | TeamTimer`
     }
   },
 
   mounted () {
-    this.socket.on('reply-for-join-the-room', () => {
-
+    this.socket.on('reply-for-join-the-room', (admission) => {
+      if (!admission) {
+        this.$router.push("/")
+      }
     })
-    this.socket.emit('join-the-room')
+    this.socket.emit('join-the-room', this.$route.params.id)
   },
 
   methods: {
@@ -94,6 +96,7 @@ export default {
 
     copyUrl() {
       this.$copyText(window.location.origin + this.$route.fullPath)
+      alert("URLをクリップボードにコピーしました。\nチームメンバーに共有しましょう！")
     }
 
   }
