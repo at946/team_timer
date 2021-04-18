@@ -19,7 +19,7 @@
               @blur="focusOutInput"
       >
     </div>
-    <button @click="startTimer"
+    <button @click="sendStartTimer"
             :disabled="(Number(minute) * 60 + Number(second)) <= 0 || timerIsRunning"
     >START</button>
     <button @click="stopTimer"
@@ -29,7 +29,6 @@
             :disabled="timerIsRunning"
     >RESET</button>
     <button @click="copyUrl">COPY URL</button>
-    {{ time }}
   </div>
 </template>
 
@@ -61,12 +60,7 @@ export default {
   mounted () {
     // join-the-roomのレスポンスを受け取る
     this.socket.on('reply-for-join-the-room', (res) => {
-      if (res.admission) {
-        if (res.time) {
-          this.time = res.time
-          this.calcMinSecFromTime()
-        }
-      } else {
+      if (!res.admission) {
         this.$router.push("/")
       }
     })
@@ -75,6 +69,16 @@ export default {
     this.socket.on('set-timer', (res) => { 
       this.time = res.time
       this.calcMinSecFromTime()
+    })
+
+    // タイマーの終了を受け取る
+    this.socket.on('finish-timer', () => {
+      Push.create("Time is up!!", {
+        onClick: function () {
+          window.focus()
+          this.close()
+        }
+      })
     })
 
     // ルームに参加
@@ -96,7 +100,7 @@ export default {
     // タイマーからフォーカスアウトしたら、設定の更新をソケットに送る
     focusOutInput() {
       this.checkTimerValidation()
-      this.socket.emit('set-timer', { room_id: this.$route.params.id, time: this.time })
+      this.socket.emit('update-timer', { room_id: this.$route.params.id, time: this.time })
     },
 
     checkTimerValidation() {
@@ -112,33 +116,37 @@ export default {
       this.calcMinSecFromTime()
     },
 
-    startTimer() {
-      this.checkTimerValidation()
-
-      if (this.time <= 0) { return }
-
-      // リセット用にtimeの履歴を残す
-      this.resetTime = this.time
-
-      const alermDate = new Date()
-      alermDate.setSeconds(alermDate.getSeconds() + this.time)
-      this.timerIsRunning = true
-
-      this.timer = setInterval(() => {
-        const presentDate = new Date()
-        this.time = Math.round((alermDate - presentDate) / 1000)
-        this.calcMinSecFromTime()
-        if (this.time < 1) {
-          this.stopTimer()
-          Push.create("Time is up!!", {
-            onClick: function () {
-              window.focus()
-              this.close()
-            }
-          })
-        }
-      }, 1000)
+    sendStartTimer() {
+      this.socket.emit('start-timer', {room_id: this.$route.params.id})
     },
+
+    // startTimer() {
+    //   this.checkTimerValidation()
+
+    //   if (this.time <= 0) { return }
+
+    //   // リセット用にtimeの履歴を残す
+    //   this.resetTime = this.time
+
+    //   const alermDate = new Date()
+    //   alermDate.setSeconds(alermDate.getSeconds() + this.time)
+    //   this.timerIsRunning = true
+
+    //   this.timer = setInterval(() => {
+    //     const presentDate = new Date()
+    //     this.time = Math.round((alermDate - presentDate) / 1000)
+    //     this.calcMinSecFromTime()
+    //     if (this.time < 1) {
+    //       this.stopTimer()
+    //       Push.create("Time is up!!", {
+    //         onClick: function () {
+    //           window.focus()
+    //           this.close()
+    //         }
+    //       })
+    //     }
+    //   }, 1000)
+    // },
 
     stopTimer() {
       clearInterval(this.timer)
