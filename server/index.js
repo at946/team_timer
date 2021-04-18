@@ -37,6 +37,7 @@ async function start () {
 startSocket = (server) => {
   const io = socket(server)
   const rooms = [/*id, time, timerIsRunning*/]
+  var timer
 
   io.on('connection', (socket) => {    
     // ルームの作成
@@ -55,6 +56,7 @@ startSocket = (server) => {
         socket.join(room_id)
         io.to(socket.id).emit('reply-for-join-the-room', { admission: true })
         if (room.time) { io.to(socket.id).emit('set-timer', { time: room.time }) }
+        if (room.timerIsRunning) { io.to(socket.id).emit('start-timer') }
       } else {
         io.to(socket.id).emit('reply-for-join-the-room', { admission: false })
       }
@@ -73,16 +75,32 @@ startSocket = (server) => {
     socket.on('start-timer', (req) => {
       const room = rooms.find((room) => room.id == req.room_id)
       if (room) {
-        const timer = setInterval(() => {
+        timer = setInterval(() => {
           room.time -= 1
           io.in(room.id).emit('set-timer', {time: room.time })
           if (room.time < 1) {
-            clearInterval(timer)
+            stopTimer(room)
             io.in(room.id).emit('finish-timer')
           }
         }, 1000)
       }
+      room.timerIsRunning = true
+      io.in(room.id).emit('start-timer')
     })
+
+    // タイマーの停止
+    socket.on('stop-timer', (req) => {
+      const room = rooms.find((room) => room.id == req.room_id)
+      if (room) {
+        stopTimer(room)
+        io.in(room.id).emit('stop-timer')
+      }
+    })
+
+    stopTimer = (room) => {
+      clearInterval(timer)
+      room.timerIsRunning = false
+    }
 
   })
 }

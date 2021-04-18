@@ -19,7 +19,7 @@
               @blur="focusOutInput"
       >
     </div>
-    <button @click="sendStartTimer"
+    <button @click="startTimer"
             :disabled="(Number(minute) * 60 + Number(second)) <= 0 || timerIsRunning"
     >START</button>
     <button @click="stopTimer"
@@ -71,8 +71,19 @@ export default {
       this.calcMinSecFromTime()
     })
 
+    // タイマーの開始を受け取る
+    this.socket.on('start-timer', () => {
+      this.timerIsRunning = true
+    })
+
+    // タイマーの停止を受け取る
+    this.socket.on('stop-timer', () => {
+      this.timerIsRunning = false
+    })
+
     // タイマーの終了を受け取る
     this.socket.on('finish-timer', () => {
+      this.timerIsRunning = false
       Push.create("Time is up!!", {
         onClick: function () {
           window.focus()
@@ -116,7 +127,7 @@ export default {
       this.calcMinSecFromTime()
     },
 
-    sendStartTimer() {
+    startTimer() {
       this.socket.emit('start-timer', {room_id: this.$route.params.id})
     },
 
@@ -149,8 +160,7 @@ export default {
     // },
 
     stopTimer() {
-      clearInterval(this.timer)
-      this.timerIsRunning = false
+      this.socket.emit('stop-timer', { room_id: this.$route.params.id })
     },
 
     resetTimer() {
