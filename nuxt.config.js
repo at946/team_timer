@@ -22,6 +22,8 @@ module.exports = {
   ** Global CSS
   */
   css: [
+    '@/assets/css/destyle.css', // リセットCSS
+    '@/assets/css/_spacing.scss'
   ],
   /*
   ** Plugins to load before mounting the App
