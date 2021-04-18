@@ -164,9 +164,7 @@ export default {
     },
 
     resetTimer() {
-      this.time = this.resetTime
-      this.calcMinSecFromTime()
-      this.socket.emit('set-timer', { room_id: this.$route.params.id, time: this.time })
+      this.socket.emit('reset-timer', { room_id: this.$route.params.id })
     },
 
     copyUrl() {

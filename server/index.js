@@ -36,7 +36,7 @@ async function start () {
 
 startSocket = (server) => {
   const io = socket(server)
-  const rooms = [/*id, time, timerIsRunning*/]
+  const rooms = [/*id, time, resetTime, timerIsRunning*/]
   var timer
 
   io.on('connection', (socket) => {    
@@ -75,6 +75,7 @@ startSocket = (server) => {
     socket.on('start-timer', (req) => {
       const room = rooms.find((room) => room.id == req.room_id)
       if (room) {
+        room.resetTime = room.time
         timer = setInterval(() => {
           room.time -= 1
           io.in(room.id).emit('set-timer', {time: room.time })
@@ -97,10 +98,20 @@ startSocket = (server) => {
       }
     })
 
+    // タイマーをストップする
     stopTimer = (room) => {
       clearInterval(timer)
       room.timerIsRunning = false
     }
+
+    // タイマーをリセット
+    socket.on('reset-timer', (req) => {
+      const room = rooms.find((room) => room.id  == req.room_id)
+      if (room) {
+        room.time = room.resetTime
+        io.in(room.id).emit('set-timer', { time: room.time })
+      }
+    })
 
   })
 }
