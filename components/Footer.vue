@@ -1,11 +1,16 @@
 <template>
-  <footer>
-    <div class="mb-1">
+  <footer class="py-2">
+    <div class="mb-2">
       <button class="button wrapper-icons p-1" @click="shareToTwitter">
         <fa :icon="faTwitter" class="text-twitter" />
       </button>
     </div>
-    <div>created by <a href="https://twitter.com/at_946" target="_blank" class="text-twitter">at946</a></div>
+    <div class="mb-1">
+      <nuxt-link to="/terms_of_service">利用規約</nuxt-link>
+    </div>
+    <div>
+      created by <a href="https://twitter.com/at_946" target="_blank" class="text-twitter">at946</a>
+    </div>
   </footer>
 </template>
 

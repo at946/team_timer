@@ -36,6 +36,7 @@ html, body {
   border-width: 0;
   border-radius: 3rem;
   box-shadow: 3px 3px 5px darken($primary, 20%), -3px -3px 5px lighten($primary, 10%);
+  text-decoration: none!important;
 
   &:hover, &:focus {
     background: darken($primary, 10%);
@@ -56,7 +57,7 @@ html, body {
 }
 
 a {
-  &:focus {
+  &:hover, &:focus {
     outline: none;
     text-decoration: underline;
   }
