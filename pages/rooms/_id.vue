@@ -21,19 +21,19 @@
       >
     </div>
     <div class="mb-4">
-      <button class="button wrapper-icons mx-1"
+      <button class="button wrapper-icons"
               @click="startTimer"
               :disabled="(Number(minute) * 60 + Number(second)) <= 0 || timerIsRunning"
       >
         <span class="material-icons">play_arrow</span>
       </button>
-      <button class="button wrapper-icons mx-1"
+      <button class="button wrapper-icons"
               @click="stopTimer"
               :disabled="!timerIsRunning"
       >
         <span class="material-icons">pause</span>
       </button>
-      <button class="button wrapper-icons mx-1"
+      <button class="button wrapper-icons"
               @click="resetTimer"
               :disabled="!timerIsResetable || timerIsRunning"
       >
@@ -179,7 +179,12 @@ export default {
 @import '@/assets/css/_color.scss';
 
 .timer {
-  font-size: 5rem;
+  @media screen and (max-width: 375px)  {
+    font-size: 3rem;
+  }
+  @media screen and (min-width: 376px) {
+    font-size: 5rem;
+  }
   font-weight: bold;
   display: inline-block;
   box-shadow: inset 3px 3px 5px darken($primary, 25%),
