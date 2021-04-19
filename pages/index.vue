@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="my-10">TEAM TIMER</h1>
-    <button class="button button-create-room wrapper-material-icons" @click="createRoom">
+    <button class="button button-create-room wrapper-icons" @click="createRoom">
       <span class="material-icons mr-1">room</span>create a room
     </button>
   </div>

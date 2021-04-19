@@ -39,7 +39,10 @@ module.exports = {
   ** Nuxt.js modules
   */
   modules: [
-    'nuxt-clipboard2'
+    'nuxt-clipboard2',
+    ['nuxt-fontawesome', {
+      component: 'fa'
+    }]
   ],
   /*
   ** Build configuration

@@ -21,19 +21,19 @@
       >
     </div>
     <div class="mb-4">
-      <button class="button wrapper-material-icons mx-1"
+      <button class="button wrapper-icons mx-1"
               @click="startTimer"
               :disabled="(Number(minute) * 60 + Number(second)) <= 0 || timerIsRunning"
       >
         <span class="material-icons">play_arrow</span>
       </button>
-      <button class="button wrapper-material-icons mx-1"
+      <button class="button wrapper-icons mx-1"
               @click="stopTimer"
               :disabled="!timerIsRunning"
       >
         <span class="material-icons">pause</span>
       </button>
-      <button class="button wrapper-material-icons mx-1"
+      <button class="button wrapper-icons mx-1"
               @click="resetTimer"
               :disabled="!timerIsResetable || timerIsRunning"
       >
@@ -41,14 +41,14 @@
       </button>
     </div>
     <div class="mb-5">
-      <button class="button wrapper-material-icons"
+      <button class="button wrapper-icons"
               @click="copyUrl"
       >
         <span class="material-icons mr-1">group_add</span>Invite members
       </button>
     </div>
     <div>
-      <nuxt-link class="button wrapper-material-icons" to="/">
+      <nuxt-link class="button wrapper-icons" to="/">
         <span class="material-icons">home</span>
       </nuxt-link>
     </div>

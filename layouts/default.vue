@@ -58,10 +58,11 @@ html, body {
 a {
   &:focus {
     outline: none;
+    text-decoration: underline;
   }
 }
 
-.wrapper-material-icons {
+.wrapper-icons {
   display: inline-flex;
   align-items: center;
 }
