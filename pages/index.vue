@@ -1,7 +1,9 @@
 <template>
   <div>
     <h1 class="my-10">TEAM TIMER</h1>
-    <button @click="createRoom">create a room</button>
+    <button class="button button-create-room wrapper-material-icons" @click="createRoom">
+      <span class="material-icons mr-1">room</span>create a room
+    </button>
   </div>
 </template>
 
@@ -37,16 +39,7 @@ h1 {
   font-size: 5rem;
 }
 
-button {
+.button-create-room {
   font-size: 1.2rem;
-  padding: 1rem 2rem;
-  background: $back;
-  border-width: 0;
-  border-radius: 3rem;
-  box-shadow: 3px 3px 5px darken($back, 50%), -3px -3px 5px lighten($back, 50%);
-
-  &:active {
-    box-shadow: inset 3px 3px 5px darken($back, 50%), inset -3px -3px 5px lighten($back, 50%);
-  }
 }
 </style>

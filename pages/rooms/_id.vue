@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="timer">
+    <div class="timer mt-10 mb-5 px-4 py-2">
       <input  type="number"
               v-model="minute"
               placeholder="mm"
@@ -8,6 +8,7 @@
               max="60"
               :readonly="timerIsRunning"
               @blur="focusOutInput"
+              autofocus
       >
       <span>:</span>
       <input  type="number"
@@ -19,16 +20,38 @@
               @blur="focusOutInput"
       >
     </div>
-    <button @click="startTimer"
-            :disabled="(Number(minute) * 60 + Number(second)) <= 0 || timerIsRunning"
-    >START</button>
-    <button @click="stopTimer"
-            :disabled="!timerIsRunning"
-    >STOP</button>
-    <button @click="resetTimer"
-            :disabled="timerIsRunning"
-    >RESET</button>
-    <button @click="copyUrl">COPY URL</button>
+    <div class="mb-4">
+      <button class="button wrapper-material-icons mx-1"
+              @click="startTimer"
+              :disabled="(Number(minute) * 60 + Number(second)) <= 0 || timerIsRunning"
+      >
+        <span class="material-icons">play_arrow</span>
+      </button>
+      <button class="button wrapper-material-icons mx-1"
+              @click="stopTimer"
+              :disabled="!timerIsRunning"
+      >
+        <span class="material-icons">pause</span>
+      </button>
+      <button class="button wrapper-material-icons mx-1"
+              @click="resetTimer"
+              :disabled="!timerIsResetable || timerIsRunning"
+      >
+        <span class="material-icons">replay</span>
+      </button>
+    </div>
+    <div class="mb-5">
+      <button class="button wrapper-material-icons"
+              @click="copyUrl"
+      >
+        <span class="material-icons mr-1">group_add</span>Invite members
+      </button>
+    </div>
+    <div>
+      <nuxt-link class="button wrapper-material-icons" to="/">
+        <span class="material-icons">home</span>
+      </nuxt-link>
+    </div>
   </div>
 </template>
 
@@ -41,13 +64,14 @@ export default {
     return {
       socket: io(),
       timer: null,
-      minute: null,
-      second: null,
+      minute: '00',
+      second: '00',
       time: null,
       resetTime: null,
       setMinute: '',
       setSecond: '',
       timerIsRunning: false,
+      timerIsResetable: false
     }
   },
 
@@ -60,7 +84,9 @@ export default {
   mounted () {
     // join-the-roomのレスポンスを受け取る
     this.socket.on('reply-for-join-the-room', (res) => {
-      if (!res.admission) {
+      if (res.admission) {
+        this.timerIsResetable = res.timerIsResetable
+      } else {
         this.$router.push("/")
       }
     })
@@ -74,6 +100,7 @@ export default {
     // タイマーの開始を受け取る
     this.socket.on('start-timer', () => {
       this.timerIsRunning = true
+      this.timerIsResetable = true
     })
 
     // タイマーの停止を受け取る
@@ -99,8 +126,8 @@ export default {
   methods: {
     // 秒から分秒を計算する
     calcMinSecFromTime() {
-      this.minute = Math.floor(this.time / 60)
-      this.second = this.time % 60
+      this.minute = ("00" + Math.floor(this.time / 60)).slice(-2)
+      this.second = ("00" + this.time % 60).slice(-2)
     },
 
     // 分秒から秒を計算する
@@ -131,34 +158,6 @@ export default {
       this.socket.emit('start-timer', {room_id: this.$route.params.id})
     },
 
-    // startTimer() {
-    //   this.checkTimerValidation()
-
-    //   if (this.time <= 0) { return }
-
-    //   // リセット用にtimeの履歴を残す
-    //   this.resetTime = this.time
-
-    //   const alermDate = new Date()
-    //   alermDate.setSeconds(alermDate.getSeconds() + this.time)
-    //   this.timerIsRunning = true
-
-    //   this.timer = setInterval(() => {
-    //     const presentDate = new Date()
-    //     this.time = Math.round((alermDate - presentDate) / 1000)
-    //     this.calcMinSecFromTime()
-    //     if (this.time < 1) {
-    //       this.stopTimer()
-    //       Push.create("Time is up!!", {
-    //         onClick: function () {
-    //           window.focus()
-    //           this.close()
-    //         }
-    //       })
-    //     }
-    //   }, 1000)
-    // },
-
     stopTimer() {
       this.socket.emit('stop-timer', { room_id: this.$route.params.id })
     },
@@ -169,9 +168,29 @@ export default {
 
     copyUrl() {
       this.$copyText(window.location.origin + this.$route.fullPath)
-      alert("URLをクリップボードにコピーしました。\nチームメンバーに共有しましょう！")
+      alert("URLをコピーしました。チームメンバーに共有して、この部屋に招待しましょう！\nThe URL has been copied. Share it with your team members and invite them to this room!")
     }
 
   }
 }
 </script>
+
+<style lang="scss" scoped>
+@import '@/assets/css/_color.scss';
+
+.timer {
+  font-size: 5rem;
+  font-weight: bold;
+  display: inline-block;
+  box-shadow: inset 3px 3px 5px darken($primary, 25%),
+              inset -3px -3px 5px lighten($primary, 25%);
+
+  input { 
+    &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+      -moz-appearance:textfield;
+    }
+  }
+}
+</style>
