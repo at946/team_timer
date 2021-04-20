@@ -27,7 +27,18 @@ export default {
     this.socket.on('reply-for-create-a-room', (room_id) => {
       this.$router.push(`/rooms/${room_id}`)
     })
+
+    // ウィンドウを閉じたときにルームから立ち去る
+    window.onbeforeunload = () => {
+      this.socket.close()
+    }
   },
+
+  beforeRouteLeave(to, from, next) {
+    this.socket.close()
+    next()
+  },
+
 
   methods: {
     createRoom() {

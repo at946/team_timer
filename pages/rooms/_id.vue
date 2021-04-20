@@ -66,8 +66,8 @@ export default {
     return {
       socket: io(),
       timer: null,
-      minute: '00',
-      second: '00',
+      minute: null,
+      second: null,
       time: null,
       resetTime: null,
       setMinute: '',
@@ -129,11 +129,21 @@ export default {
       })
     })
 
+    // ウィンドウを閉じたときにルームから立ち去る
+    window.onbeforeunload = () => {
+      this.socket.close()
+    }
+
     // ルームに参加
     this.socket.emit('join-the-room', this.$route.params.id)
     
     // プッシュ許可を取る
     Push.Permission.request()
+  },
+
+  beforeRouteLeave(to, from, next) {
+    this.socket.close()
+    next()
   },
 
   methods: {
@@ -203,7 +213,8 @@ export default {
   box-shadow: inset 3px 3px 5px darken($primary, 25%),
               inset -3px -3px 5px lighten($primary, 25%);
 
-  input { 
+  input {
+    width: 100px!important;
     &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
       -webkit-appearance: none;
       margin: 0;
