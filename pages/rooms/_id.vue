@@ -66,8 +66,8 @@ export default {
     return {
       socket: io(),
       timer: null,
-      minute: null,
-      second: null,
+      minute: '00',
+      second: '00',
       time: null,
       resetTime: null,
       setMinute: '',
@@ -214,7 +214,9 @@ export default {
               inset -3px -3px 5px lighten($primary, 25%);
 
   input {
-    width: 100px!important;
+    @media screen and (max-width: 375px) {
+      width: 80px;
+    }
     &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
       -webkit-appearance: none;
       margin: 0;
