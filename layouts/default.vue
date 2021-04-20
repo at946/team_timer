@@ -18,7 +18,6 @@ export default {
 <style lang="scss">
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
 
 @import '@/assets/css/_color.scss';
 

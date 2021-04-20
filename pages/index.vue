@@ -2,19 +2,25 @@
   <div>
     <h1 class="my-10">TEAM TIMER</h1>
     <button class="button button-create-room wrapper-icons" @click="createRoom">
-      <span class="material-icons mr-1">room</span>create a room
+      <fa :icon="faHourglassStart" class="mr-1" />
+      <span>create a room</span>
     </button>
   </div>
 </template>
 
 <script>
 import io from 'socket.io-client'
+import { faHourglassStart } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   data () {
     return {
       socket: io()
     }
+  },
+
+  computed: {
+    faHourglassStart() { return faHourglassStart }
   },
 
   mounted () {

@@ -52,8 +52,17 @@ module.exports = {
     'nuxt-clipboard2',
     ['nuxt-fontawesome', {
       component: 'fa'
-    }]
+    }],
+    '@nuxtjs/google-analytics'
   ],
+  googleAnalytics: {
+    id: process.env.GOOGLE_ANALYTICS_ID
+  },
+  publicRuntimeConfig: {
+    googleAnalytics: {
+      id: process.env.GOOGLE_ANALYTICS_ID
+    }
+  },
   /*
   ** Build configuration
   */

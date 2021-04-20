@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { faTwitter } from '@fortawesome/free-brands-svg-icons';
+import { faTwitter } from '@fortawesome/free-brands-svg-icons'
 
 export default {
   computed: {

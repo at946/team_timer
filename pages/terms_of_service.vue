@@ -101,10 +101,20 @@
       <p class="text-right">以上</p>
     </div>
     <nuxt-link class="button wrapper-icons" to="/">
-      <span class="material-icons">home</span>
+      <fa :icon="faHome" />
     </nuxt-link>
   </div>
 </template>
+
+<script>
+import { faHome } from '@fortawesome/free-solid-svg-icons'
+
+export default {
+  computed: {
+    faHome() { return faHome }
+  }  
+}
+</script>
 
 <style lang="scss" scoped>
 @import '@/assets/css/_color.scss';

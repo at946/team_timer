@@ -25,31 +25,32 @@
               @click="startTimer"
               :disabled="(Number(minute) * 60 + Number(second)) <= 0 || timerIsRunning"
       >
-        <span class="material-icons">play_arrow</span>
+        <fa :icon="faPlay" />
       </button>
       <button class="button wrapper-icons"
               @click="stopTimer"
               :disabled="!timerIsRunning"
       >
-        <span class="material-icons">pause</span>
+        <fa :icon="faPause" />
       </button>
       <button class="button wrapper-icons"
               @click="resetTimer"
               :disabled="!timerIsResetable || timerIsRunning"
       >
-        <span class="material-icons">replay</span>
+        <fa :icon="faUndo" />
       </button>
     </div>
     <div class="mb-5">
       <button class="button wrapper-icons"
               @click="copyUrl"
       >
-        <span class="material-icons mr-1">group_add</span>Invite members
+        <fa :icon="faUserPlus" class="mr-1" />
+        <span>Invite members</span>
       </button>
     </div>
     <div>
       <nuxt-link class="button wrapper-icons" to="/">
-        <span class="material-icons">home</span>
+        <fa :icon="faHome" />
       </nuxt-link>
     </div>
   </div>
@@ -58,6 +59,7 @@
 <script>
 import io from 'socket.io-client'
 import Push from 'push.js'
+import { faPlay, faPause, faUndo, faUserPlus, faHome } from '@fortawesome/free-solid-svg-icons'
 
 export default {
   data () {
@@ -79,6 +81,14 @@ export default {
     return {
       title: `${("00" + Number(this.minute)).slice(-2)}:${("00" + Number(this.second)).slice(-2)} | TeamTimer`
     }
+  },
+
+  computed: {
+    faPlay()      { return faPlay },
+    faPause()     { return faPause },
+    faUndo()      { return faUndo },
+    faUserPlus()  { return faUserPlus },
+    faHome()      { return faHome }
   },
 
   mounted () {
