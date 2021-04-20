@@ -131,6 +131,9 @@ export default {
 
     // ルームに参加
     this.socket.emit('join-the-room', this.$route.params.id)
+    
+    // プッシュ許可を取る
+    Push.Permission.request()
   },
 
   methods: {
