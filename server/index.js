@@ -36,7 +36,7 @@ async function start () {
 
 startSocket = (server) => {
   const io = socket(server)
-  const rooms = [/* id, time, resetTime, timerIsRunning */]
+  const rooms = [/* id, time, resetTime, timerIsRunning, userSetsTimer */]
   var timer
 
   io.on('connection', (socket) => {    
@@ -67,6 +67,7 @@ startSocket = (server) => {
       const room = rooms.find((room) => room.id == req.room_id)
       if (room) {
         room.time = req.time
+        room.userSetsTimer = true
         io.in(room.id).emit('set-timer', { time: room.time })  
       }
     })
@@ -75,7 +76,10 @@ startSocket = (server) => {
     socket.on('start-timer', (req) => {
       const room = rooms.find((room) => room.id == req.room_id)
       if (room) {
-        room.resetTime = room.time
+        if (room.userSetsTimer) {
+          room.resetTime = room.time
+          room.userSetsTimer = false
+        }
         timer = setInterval(() => {
           room.time -= 1
           io.in(room.id).emit('set-timer', {time: room.time })

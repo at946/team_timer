@@ -8,7 +8,6 @@
               max="60"
               :readonly="timerIsRunning"
               @blur="focusOutInput"
-              autofocus
       >
       <span>:</span>
       <input  type="number"
