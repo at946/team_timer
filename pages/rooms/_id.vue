@@ -72,7 +72,8 @@ export default {
       setMinute: '',
       setSecond: '',
       timerIsRunning: false,
-      timerIsResetable: false
+      timerIsResetable: false,
+      pingToTheRoom: null
     }
   },
 
@@ -102,12 +103,14 @@ export default {
 
     // タイマー設定の更新を受け取る
     this.socket.on('set-timer', (res) => { 
+      console.log("set-timer")
       this.time = res.time
       this.calcMinSecFromTime()
     })
 
     // タイマーの開始を受け取る
     this.socket.on('start-timer', () => {
+      console.log("start")
       this.timerIsRunning = true
       this.timerIsResetable = true
     })
@@ -128,24 +131,34 @@ export default {
       })
     })
 
-    // ウィンドウを閉じたときにルームから立ち去る
-    window.onbeforeunload = () => {
-      this.socket.close()
-    }
-
-    // ルームに参加
-    this.socket.emit('join-the-room', this.$route.params.id)
+    // ルームに参加しているか定期的に確認する
+    this.pingToTheRoom = setInterval(()  => {
+      this.joinRoom()
+    }, 1000)
     
     // プッシュ許可を取る
     Push.Permission.request()
-  },
 
+    // ウィンドウを閉じたときにルームから立ち去る
+    window.onbeforeunload = () => {
+      clearInterval(this.pingToTheRoom)
+      this.socket.close()
+    }
+},
+
+  // リロードや画面遷移の際にルームから立ち去る
   beforeRouteLeave(to, from, next) {
+    clearInterval(this.pingToTheRoom)
     this.socket.close()
     next()
   },
 
   methods: {
+    // ルームに参加する
+    joinRoom() {
+      this.socket.emit('join-the-room', this.$route.params.id)
+    },
+
     // 秒から分秒を計算する
     calcMinSecFromTime() {
       this.minute = ("00" + Math.floor(this.time / 60)).slice(-2)

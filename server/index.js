@@ -51,6 +51,7 @@ startSocket = (server) => {
 
     // ルームへの参加
     socket.on('join-the-room', (room_id) => {
+      if (socket.rooms.size > 1) { return }
       const room = rooms.find((room) => room.id == room_id)
       if (room) {
         socket.join(room_id)
