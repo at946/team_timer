@@ -214,10 +214,10 @@ export default {
 @import '@/assets/css/_color.scss';
 
 .timer {
-  @media screen and (max-width: 375px)  {
+  @media screen and (max-width: 416px)  {
     font-size: 3rem;
   }
-  @media screen and (min-width: 376px) {
+  @media screen and (min-width: 417px) {
     font-size: 5rem;
   }
   font-weight: bold;
@@ -226,8 +226,11 @@ export default {
               inset -3px -3px 5px lighten($primary, 25%);
 
   input {
-    @media screen and (max-width: 375px) {
+    @media screen and (max-width: 416px) {
       width: 80px;
+    }
+    @media screen and (min-width: 417px) {
+      width: 120px;
     }
     &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
       -webkit-appearance: none;
