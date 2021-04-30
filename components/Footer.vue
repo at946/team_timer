@@ -26,7 +26,7 @@ export default {
   methods: {
     shareToTwitter() {
       window.open(
-        `https://twitter.com/intent/tweet?text=${encodeURIComponent('Team Timer #teamtimer\n')}&url=${encodeURIComponent(window.location.origin)}`,
+        `https://twitter.com/intent/tweet?text=${encodeURIComponent('Our Timer #ourtimer\n')}&url=${encodeURIComponent(window.location.origin)}`,
         "_blank"
       )
     }
