@@ -1,5 +1,5 @@
-const productName = 'Team Timer'
-const description = 'Team Timerはチームでタイマーを共有できるツールです。同じURLにアクセスするだけでタイマーを共有できます。リモートでグループワークをするときに便利です。もちろん一人でも使えます。'
+const productName = 'Our Timer'
+const description = 'Our Timerはチームでタイマーを共有できるツールです。同じURLにアクセスするだけでタイマーを共有できます。リモートでグループワークをするときに便利です。もちろん一人でも使えます。'
 const baseUrl = process.env.BASE_URL || 'http://localhost:3000'
 
 module.exports = {
