@@ -1,7 +1,7 @@
 <template>
   <footer class="py-2">
     <div class="mb-2">
-      <button class="button wrapper-icons p-1" @click="shareToTwitter">
+      <button class="wrapper-icons p-1" @click="shareToTwitter">
         <fa :icon="faTwitter" class="text-twitter" />
       </button>
     </div>

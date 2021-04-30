@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1 class="my-10">TEAM TIMER</h1>
+    <h1 class="my-10">Our Timer</h1>
     <button class="button button-create-room wrapper-icons" @click="createRoom">
       <fa :icon="faHourglassStart" class="mr-1" />
       <span>create a room</span>
@@ -52,7 +52,6 @@ export default {
 @import '@/assets/css/_color.scss';
 
 h1 {
-  font-weight: bold;
   font-size: 5rem;
 }
 

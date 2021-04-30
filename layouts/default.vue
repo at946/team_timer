@@ -16,7 +16,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Quicksand&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Kosugi+Maru&display=swap');
 
 @import '@/assets/css/_color.scss';
@@ -25,34 +25,29 @@ html, body {
   font-family: 'Quicksand', 'Kosugi Maru', sans-serif;
   text-align: center;
   color: $black;
-  background: $primary;
+  background:$primary;
   margin: 0;
   padding: 0 .5rem;
 }
 
 .button {
   padding: 1rem 2rem;
-  background: $primary;
-  border-width: 0;
+  border-color: darken($primary, 15%);
+  border-width: 1px;
   border-radius: 3rem;
-  box-shadow: 3px 3px 5px darken($primary, 20%), -3px -3px 5px lighten($primary, 10%);
   text-decoration: none!important;
 
   &:hover, &:focus {
-    background: darken($primary, 10%);
+    background: darken($primary, 15%);
 
     &:disabled {
       background: $primary;
     }
   }
 
-  &:active {
-    box-shadow: inset 3px 3px 5px darken($primary, 20%), inset -3px -3px 5px lighten($primary, 10%);
-  }
-
   &:disabled {
-    box-shadow: inset 3px 3px 5px darken($primary, 20%), inset -3px -3px 5px lighten($primary, 10%);
     color: lighten($black, 50%);
+    border-color: $primary;
   }
 }
 

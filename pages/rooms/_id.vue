@@ -203,7 +203,7 @@ export default {
 
     copyUrl() {
       this.$copyText(window.location.origin + this.$route.fullPath)
-      alert("URLをコピーしました。チームメンバーに共有して、この部屋に招待しましょう！\nThe URL has been copied. Share it with your team members and invite them to this room!")
+      alert("URLをクリップボードにコピーしたよ。\nチームメンバーに共有して、この部屋に招待しましょう！")
     }
 
   }
@@ -220,16 +220,13 @@ export default {
   @media screen and (min-width: 417px) {
     font-size: 5rem;
   }
-  font-weight: bold;
   display: inline-block;
-  box-shadow: inset 3px 3px 5px darken($primary, 25%),
-              inset -3px -3px 5px lighten($primary, 25%);
 
   input {
     @media screen and (max-width: 416px) {
       width: 80px;
     }
-    @media screen and (min-width: 417px) {
+      @media screen and (min-width: 417px) {
       width: 120px;
     }
     &::-webkit-inner-spin-button, &::-webkit-outer-spin-button {
